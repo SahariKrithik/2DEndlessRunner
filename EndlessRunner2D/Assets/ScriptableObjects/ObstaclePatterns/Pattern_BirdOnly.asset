@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea93b4f93bfdeb345b5349fca3a9f004, type: 3}
+  m_Name: Pattern_BirdOnly
+  m_EditorClassIdentifier: 
+  sequence:
+  - {fileID: 4251279785606761172, guid: 51d5398555f89e7438c55b4e2f16c752, type: 3}
+  spacing: 3

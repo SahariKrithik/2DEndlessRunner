@@ -67,4 +67,10 @@ public class ScoreManager : MonoBehaviour
     {
         return Mathf.FloorToInt(currentScore);
     }
+
+    public bool IsNewHighScore()
+    {
+        return Mathf.FloorToInt(currentScore) > highScore;
+    }
+
 }

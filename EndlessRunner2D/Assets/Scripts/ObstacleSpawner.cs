@@ -1,18 +1,19 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class ObstacleSpawner : MonoBehaviour
 {
-    public GameObject[] obstaclePrefabs;
-
+    public ObstaclePattern[] obstaclePatterns;
     public Transform cactusSpawnPoint;
     public Transform birdSpawnPoint;
 
     public float baseMinInterval = 1.2f;
     public float baseMaxInterval = 2.5f;
-    public float minSpacing = 6f;
 
     private float spawnTimer;
-    private GameObject lastSpawnedObstacle;
+
+    private ObstaclePattern lastUsedPattern;
+
 
     void Update()
     {
@@ -20,20 +21,12 @@ public class ObstacleSpawner : MonoBehaviour
         {
             spawnTimer -= Time.deltaTime;
 
-            if (spawnTimer <= 0f && CanSpawnNewObstacle())
+            if (spawnTimer <= 0f)
             {
-                SpawnObstacle();
+                StartCoroutine(SpawnPattern());
                 spawnTimer = GetAdjustedSpawnInterval();
             }
         }
-    }
-
-    bool CanSpawnNewObstacle()
-    {
-        if (lastSpawnedObstacle == null) return true;
-
-        float distance = Mathf.Abs(lastSpawnedObstacle.transform.position.x - cactusSpawnPoint.position.x);
-        return distance >= minSpacing;
     }
 
     float GetAdjustedSpawnInterval()
@@ -43,16 +36,37 @@ public class ObstacleSpawner : MonoBehaviour
         return Random.Range(interval, interval + 0.5f);
     }
 
-    void SpawnObstacle()
+    IEnumerator SpawnPattern()
     {
-        int index = Random.Range(0, obstaclePrefabs.Length);
-        GameObject prefab = obstaclePrefabs[index];
+        if (obstaclePatterns.Length == 0)
+            yield break;
 
-        Vector3 spawnPos = prefab.name.ToLower().Contains("bird")
-            ? birdSpawnPoint.position
-            : cactusSpawnPoint.position;
+        ObstaclePattern pattern = null;
 
-        GameObject obstacle = Instantiate(prefab, spawnPos, Quaternion.identity);
-        lastSpawnedObstacle = obstacle;
+        if (obstaclePatterns.Length == 1)
+        {
+            pattern = obstaclePatterns[0]; // only one option
+        }
+        else
+        {
+            int attempt = 0;
+            do
+            {
+                pattern = obstaclePatterns[Random.Range(0, obstaclePatterns.Length)];
+                attempt++;
+            }
+            while (pattern == lastUsedPattern && attempt < 10); // avoid infinite loop
+        }
+
+        lastUsedPattern = pattern;
+
+
+        foreach (GameObject prefab in pattern.sequence)
+        {
+            Vector3 spawnPos = prefab.name.ToLower().Contains("bird") ? birdSpawnPoint.position : cactusSpawnPoint.position;
+            GameObject obj = Instantiate(prefab, spawnPos, Quaternion.identity);
+
+            yield return new WaitForSeconds(pattern.spacing / GameManager.Instance.gameSpeed);
+        }
     }
 }

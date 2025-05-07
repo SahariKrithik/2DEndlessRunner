@@ -7,6 +7,7 @@ public class GameUIManager : MonoBehaviour
     public GameObject startPanel;
     public GameObject gameOverPanel;
     public TextMeshProUGUI finalScoreText;
+    public GameObject newHighScoreText;
     public Button restartButton;
 
     private bool startScreenShown = true;
@@ -16,6 +17,7 @@ public class GameUIManager : MonoBehaviour
     {
         startPanel.SetActive(true);
         gameOverPanel.SetActive(false);
+        newHighScoreText.SetActive(false); // hide initially
 
         restartButton.onClick.AddListener(RestartGame);
     }
@@ -39,6 +41,15 @@ public class GameUIManager : MonoBehaviour
                 if (scoreManager != null)
                 {
                     finalScoreText.text = "Final Score: " + scoreManager.GetFinalScore();
+
+                    if (scoreManager.IsNewHighScore())
+                    {
+                        newHighScoreText.SetActive(true);
+                    }
+                    else
+                    {
+                        newHighScoreText.SetActive(false);
+                    }
                 }
                 scoreShown = true;
             }
@@ -52,6 +63,7 @@ public class GameUIManager : MonoBehaviour
 
     void RestartGame()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(
+            UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
     }
 }
