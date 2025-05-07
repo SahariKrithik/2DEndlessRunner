@@ -116,6 +116,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log("Collided with: " + collision.gameObject.name);
+
         if (collision.gameObject.CompareTag("Obstacle"))
         {
             Debug.Log("Hit obstacle! Game Over!");

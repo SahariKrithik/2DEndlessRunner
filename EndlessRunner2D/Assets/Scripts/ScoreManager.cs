@@ -6,6 +6,9 @@ public class ScoreManager : MonoBehaviour
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI highScoreText;
 
+    private bool isNewHighScore = false;
+
+
     public float scoreMultiplier = 1f;
 
     private float currentScore = 0f;
@@ -50,10 +53,16 @@ public class ScoreManager : MonoBehaviour
             highScore = finalScore;
             PlayerPrefs.SetInt("HighScore", highScore);
             PlayerPrefs.Save();
+            isNewHighScore = true; // ✅ flag it here
+        }
+        else
+        {
+            isNewHighScore = false;
         }
 
         hasRecordedHighScore = true;
     }
+
 
     public void ResetScore()
     {
@@ -70,7 +79,8 @@ public class ScoreManager : MonoBehaviour
 
     public bool IsNewHighScore()
     {
-        return Mathf.FloorToInt(currentScore) > highScore;
+        return isNewHighScore;
     }
+
 
 }
